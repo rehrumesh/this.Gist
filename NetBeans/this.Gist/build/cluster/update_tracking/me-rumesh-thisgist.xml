@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="me.rumesh.thisgist">
+    <module_version install_time="1415644865460" last="true" origin="installer" specification_version="1.0">
+        <file crc="60089531" name="config/Modules/me-rumesh-thisgist.xml"/>
+        <file crc="2000622933" name="modules/ext/org.eclipse.egit.github.core-3.6.0-SNAPSHOT-javadoc.jar"/>
+        <file crc="542106245" name="modules/ext/org.eclipse.egit.github.core-3.6.0-SNAPSHOT.jar"/>
+        <file crc="420825248" name="modules/me-rumesh-thisgist.jar"/>
+    </module_version>
+</module>
