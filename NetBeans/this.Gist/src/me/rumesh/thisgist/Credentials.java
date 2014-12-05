@@ -5,6 +5,9 @@
  */
 package me.rumesh.thisgist;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.Collections;
 import javax.swing.ImageIcon;
@@ -14,8 +17,6 @@ import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.service.GistService;
 import org.openide.loaders.DataObject;
-import org.openide.text.DataEditorSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -32,9 +33,9 @@ public class Credentials extends javax.swing.JFrame {
     public Credentials(DataObject context) {
         initComponents();
         setLocationRelativeTo(null);
-        ImageIcon img = new ImageIcon("me/rumesh/thisgist/gist_small.png");
-        this.setIconImage(img.getImage());
         this.context = context;
+        prgBar.setMinimum(0);
+        prgBar.setMaximum(100);
     }
 
     /**
@@ -52,10 +53,15 @@ public class Credentials extends javax.swing.JFrame {
         txtPassword = new javax.swing.JPasswordField();
         cmdCancel = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        chkPublick = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtDescription = new javax.swing.JTextArea();
+        txtStatus = new javax.swing.JLabel();
+        prgBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(Credentials.class, "Credentials.title")); // NOI18N
-        setAlwaysOnTop(true);
         setIconImage(ImageUtilities.loadImage("me/rumesh/thisgist/gist_small.png"));
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
@@ -82,6 +88,16 @@ public class Credentials extends javax.swing.JFrame {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(chkPublick, org.openide.util.NbBundle.getMessage(Credentials.class, "Credentials.chkPublick.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(Credentials.class, "Credentials.jLabel3.text")); // NOI18N
+
+        txtDescription.setColumns(20);
+        txtDescription.setRows(5);
+        jScrollPane1.setViewportView(txtDescription);
+
+        org.openide.awt.Mnemonics.setLocalizedText(txtStatus, org.openide.util.NbBundle.getMessage(Credentials.class, "Credentials.txtStatus.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,11 +105,8 @@ public class Credentials extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtUName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -102,8 +115,18 @@ public class Credentials extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmdCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cmdCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtUName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(chkPublick)
+                            .addComponent(jLabel3))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addComponent(prgBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmdCancel, jButton1});
@@ -120,10 +143,19 @@ public class Credentials extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chkPublick)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmdCancel)
                     .addComponent(jButton1))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtStatus)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(prgBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -137,20 +169,43 @@ public class Credentials extends javax.swing.JFrame {
         try {
             FileObject fo = context.getPrimaryFile();
             GistFile file = new GistFile();
+            setProgress(5, "Process started");
             file.setContent(fo.asText());
             Gist gist = new Gist();
-            gist.setDescription("Prints a string to standard out");
+            setProgress(10, "Gist initiated");
+            gist.setDescription(txtDescription.getText() + "\n**Gist created using this.Gist for NetBeans**");
+            setProgress(15, "Adding details");
             gist.setFiles(Collections.singletonMap(fo.getNameExt(), file));
+            setProgress(25, "Adding details");
+            gist.setPublic(chkPublick.isSelected());
+            setProgress(35, "Adding details");
             
             GistService service = new GistService();
+            setProgress(55, "Authenticating");
             service.getClient().setCredentials(txtUName.getText(), new String(txtPassword.getPassword()));
+            setProgress(75, "Uploading contents");
             gist = service.createGist(gist); //returns the created gist
-            JOptionPane.showMessageDialog(null, "Gist published at : " + gist.getHtmlUrl());
+            setProgress(90, "Uploading success");
+            copyToClipboard(gist.getHtmlUrl());
+            setProgress(100, "Gist published successfully");
+            JOptionPane.showMessageDialog(null, "Gist published at : " + gist.getHtmlUrl()+"\n\nLink copied to the clipboard.");
+            this.dispose();
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            setProgress(0, "Process failed");
+            JOptionPane.showMessageDialog(null, "Gist creation failed. Please try again");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void copyToClipboard(String text) {
+        StringSelection stringSelection = new StringSelection(text);
+        Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clpbrd.setContents(stringSelection, null);
+    }
+
+    private void setProgress(int progressPrecentage, String status){
+        prgBar.setValue(progressPrecentage);
+        txtStatus.setText(status);
+    }
     /**
      * @param args the command line arguments
      */
@@ -187,11 +242,17 @@ public class Credentials extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox chkPublick;
     private javax.swing.JButton cmdCancel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JProgressBar prgBar;
+    private javax.swing.JTextArea txtDescription;
     private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JLabel txtStatus;
     private javax.swing.JTextField txtUName;
     // End of variables declaration//GEN-END:variables
 }
